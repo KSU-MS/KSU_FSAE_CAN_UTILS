@@ -11,11 +11,20 @@ import time
 
 db = cantools.database.load_file('dbc_files/ks6e_custom_can.dbc')
 can_bus = can.interface.Bus(bustype='slcan', channel='/dev/ttyUSB2', bitrate=500000)
-fig = plt.figure()
+pedal_fig = plt.figure(1)
+temp_fig = plt.figure(2)
+pedal_screen = pf.screen(title='Pedal Plot')
+temp_screen = pf.screen(title='Temp Plot')
 
-screen = pf.screen(title='Plot')
-max = 30
+
 start = time.time()
+def plot_live(start_time, times, vals,new_val, fig_in):
+    plt.xlim(float(times[0]),float(times[len(times)-1]))
+    plt.plot(time_list, accel_list, c='black')
+    fig_in.canvas.draw()
+
+max = 30
+
 accel_list = []
 time_list = []
 while(1):
@@ -24,6 +33,7 @@ while(1):
             if(msg.arbitration_id == 196):
                 t = time.time() - start
                 asdf = db.decode_message(msg.arbitration_id, msg.data)
+                # print(asdf)
                 accel1 = asdf["accel_1"]    
                 brake1 = asdf["brake_1"]
                 if(len(accel_list)>max):
@@ -33,8 +43,7 @@ while(1):
                 accel_list.append(accel1)
                 time_list.append(t)
                 # print(time_list)
-                plt.xlim(float(time_list[0]),float(time_list[len(time_list)-1]))
-                plt.plot(time_list, accel_list, c='black')
+                
                 fig.canvas.draw()
                 # If we haven't already shown or saved the plot, then we need to draw the figure first...
                 image = np.fromstring(fig.canvas.tostring_rgb(),  dtype=np.uint8, sep='')
