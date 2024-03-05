@@ -1,0 +1,14 @@
+{
+    "vcu_firmware_version": [
+        "all"
+    ],
+    "acu_firmware_version": [
+        "all"
+    ],
+    "dash_firmware_version":[
+        "all"
+    ],
+    "MSGID_0X6B2":[
+        "Pack_Summed_Voltage"
+    ]
+}
